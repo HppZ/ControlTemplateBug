@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -37,14 +38,18 @@ namespace ControlTemplateBug
 
         private void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
-            _text = new TextBlock() { Text = "hello world" };
+            _text = new TextBlock()
+            {
+                Text = "placeholder content",
+                Foreground = new SolidColorBrush(Colors.Red)
+            };
 
             Source = new ObservableCollection<Model>();
             for (int i = 0; i < 2000; i++)
             {
                 Source.Add(new Model()
                 {
-                    txt = i.ToString()
+                    txt = "Item " + i
                 });
             }
 
@@ -68,6 +73,8 @@ namespace ControlTemplateBug
                 _lastItem?.Remove();
 
                 _lastItem = viewitem;
+
+                // BUG: adding _text to next ListViewItem will fail after several Taps(on my machine, it is the 18th Tap)
                 _lastItem.Add(_text);
             }
         }
